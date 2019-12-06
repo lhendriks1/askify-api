@@ -6,17 +6,25 @@
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "predeploy": "npm audit && npm run migrate:production",
+    "deploy": "git push heroku master"
   },
   "keywords": [],
   "author": "",
+  "engines": {
+    "node": "12.13.1"
+  },
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
-    "morgan": "^1.9.1"
+    "knex": "^0.20.3",
+    "morgan": "^1.9.1",
+    "pg": "^7.14.0",
+    "xss": "^1.0.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
