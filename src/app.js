@@ -17,11 +17,11 @@ const morganOption = (NODE_ENV === 'production')
     : 'common';
 
 app.use(morgan(morganOption))
-app.use(helmet())
 app.use(cors(corsOptions))
+app.use(helmet())
 
-app.get('/', (req, res) => {
-    res.send("Hello, boilerplate!")
+app.get('/api/questions', (req, res) => {
+    return res.send("connected")
 })
 
 app.use(function errorHandler(error, req, res, next) {
