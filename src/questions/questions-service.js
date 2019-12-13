@@ -5,10 +5,10 @@ const QuestionsService = {
     return db
       .from('askify_questions AS q')
       .select(
-        'q.id',
-        'q.title',
-        'q.date_created',
-        'q.body',
+        'q.id AS question_id',
+        'q.title AS question_title',
+        'q.body AS question_body',
+        'q.date_created AS date_created',
         'q.tags',
         db.raw(
           `count(DISTINCT ans) AS number_of_answers`
@@ -16,24 +16,23 @@ const QuestionsService = {
         db.raw(
           `json_strip_nulls(
             json_build_object(
-              'id', usr.id,
+              'user_id', usr.id,
               'user_name', usr.user_name,
               'full_name', usr.full_name,
-              'date_created', usr.date_created,
-              'date_modified', usr.date_modified
+              'date_created', usr.date_created
             )
-          ) AS "author"`
-        ),
+          ) AS "user"`
+        )
       )
       .leftJoin(
         'askify_answers AS ans',
         'q.id',
-        'ans.question_id',
+        'ans.question_id'
       )
       .leftJoin(
         'askify_users AS usr',
-        'q.author_id',
-        'usr.id',
+        'q.user_id',
+        'usr.id'
       )
       .groupBy('q.id', 'usr.id')
   },
@@ -44,23 +43,22 @@ const QuestionsService = {
       .first()
   },
 
-  getAnswersForAQuestion(db, question_id) {
+  getAnswersForQuestion(db, question_id) {
     return db
       .from('askify_answers AS ans')
       .select(
         'ans.id',
-        'ans.text',
+        'ans.answer',
         'ans.date_created',
         db.raw(
           `json_strip_nulls(
             row_to_json(
               (SELECT tmp FROM (
                 SELECT
-                  usr.id,
+                  usr.id AS user_id,
                   usr.user_name,
                   usr.full_name,
-                  usr.date_created,
-                  usr.date_modified
+                  usr.date_created
               ) tmp)
             )
           ) AS "user"`
@@ -70,25 +68,25 @@ const QuestionsService = {
       .leftJoin(
         'askify_users AS usr',
         'ans.user_id',
-        'usr.id',
+        'usr.id'
       )
       .groupBy('ans.id', 'usr.id')
   },
 
   serializeQuestion(question) {
-    const { author } = question
+    const { user } = question
     return {
-      id: question.id,
-      title: xss(question.title),
-      content: xss(question.body),
+      id: question.question_id,
+      question_title: xss(question.question_title),
+      question_body: xss(question.question_body),
       date_created: new Date(question.date_created),
       number_of_answers: Number(question.number_of_answers) || 0,
-      author: {
-        id: author.id,
-        user_name: author.user_name,
-        full_name: author.full_name,
-        date_created: new Date(author.date_created),
-        date_modified: new Date(author.date_modified) || null
+      tags: xss(question.tags),
+      user: {
+        user_id: user.user_id,
+        user_name: user.user_name,
+        full_name: user.full_name,
+        date_created: new Date(user.date_created)
       },
     }
   },
@@ -98,7 +96,7 @@ const QuestionsService = {
     return {
       id: answer.id,
       question_id: answer.question_id,
-      text: xss(answer.text),
+      answer: xss(answer.answer),
       date_created: new Date(answer.date_created),
       user: {
         id: user.id,

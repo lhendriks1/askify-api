@@ -5,7 +5,7 @@ const config = require('../config')
 const AuthService = {
   getUserWithUserName(db, user_name) {
     return db('askify_users')
-      .where({ user_name })
+      .where({user_name})
       .first()
   },
   comparePasswords(password, hash) {

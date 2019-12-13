@@ -4,6 +4,10 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const {NODE_ENV} = require('./config')
+const questionsRouter = require('./questions/questions-router')
+const authRouter = require('./auth/auth-router')
+const usersRouter = require('./users/users-router')
+const answersRouter = require('./answers/answers-router')
 
 const app = express()
 
@@ -20,9 +24,11 @@ app.use(morgan(morganOption))
 app.use(cors(corsOptions))
 app.use(helmet())
 
-app.get('/api/questions', (req, res) => {
-    return res.send("connected")
-})
+
+app.use('/api/questions', questionsRouter)
+app.use('/api/answers', answersRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

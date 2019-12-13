@@ -1,6 +1,6 @@
 const knex = require('knex')
 const app = require('../src/app')
-//const testHelpers = require('./test-helpers')
+const helpers = require('./test-helpers')
 
 describe('Questions Endpoints', function() {
     let db 
@@ -26,9 +26,16 @@ describe('Questions Endpoints', function() {
 
     describe('/GET api/questions', () => {
         context('given no questions', () => {
+            beforeEach('insert questions', () =>
+            helpers.seedQuestionsTable(
+                db,
+                testUsers
+            )
+        )
             it(`responds with 200 and an empty list`, () => {
                 return supertest(app)
                   .get('/api/questions')
+                  .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                   .expect(200, [])
             })
         })
@@ -47,13 +54,14 @@ describe('Questions Endpoints', function() {
                 const expectedQuestions = testQuestions.map(q =>
                     helpers.makeExpectedQuestion(
                         testUsers,
-                        question,
+                        q,
                         testAnswers
                     )
                 )
 
                 return supertest(app)
                     .get('/api/questions')
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedQuestions)
             })
         })
@@ -74,16 +82,17 @@ describe('Questions Endpoints', function() {
             it('removes XSS attack content', () => {
                 return supertest(app)
                     .get('/api/questions')
+                    .set('Authorization', helpers.makeAuthHeader(testUser))
                     .expect(200)
                     .expect(res => {
-                        expect(res.body[0].q_title).to.eql(expectedQuestion.title)
-                        expect(res.body[0].q_body).to.eql(expectedQuestion.body)
+                        expect(res.body[0].question_title).to.eql(expectedQuestion.question_title)
+                        expect(res.body[0].question_body).to.eql(expectedQuestion.question_body)
                     })
             })
         })
-    })
+     })
 
-    describe('/GET /api/questons/:question_id', () => {
+    describe('/GET /api/questions/:question_id', () => {
         context('given no questions', () => {
             beforeEach(() => 
                 helpers.seedQuestionsTable(
@@ -95,8 +104,8 @@ describe('Questions Endpoints', function() {
             it('responds with 404', () => {
                 const questionId = 12345
                 return supertest(app)
-                    .get(`/api/questions/{questionId}`)
-                    //.set('Authorization': helpers.makeAuthHeader(testUser[0]))
+                    .get(`/api/questions/${questionId}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(404, {error: 'Question does not exist'})
             })
         })
@@ -112,7 +121,7 @@ describe('Questions Endpoints', function() {
             )
 
             it('responds with 200 and the specified question', () => {
-                const questionId = 2
+                const questionId = 1
                 const expectedQuestion = helpers.makeExpectedQuestion(
                     testUsers,
                     testQuestions[questionId - 1],
@@ -121,10 +130,10 @@ describe('Questions Endpoints', function() {
 
                 return supertest(app)
                     .get(`/api/questions/${questionId}`)
-                    //.set('Authorization': helpers.makeAuthHeader(testUsers[0]))
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedQuestion)
-            })  
-        })
+             })  
+         })
 
         context('given XSS question attack', () => {
             const testUser = helpers.makeUsersArray()[1]
@@ -134,34 +143,39 @@ describe('Questions Endpoints', function() {
             } = helpers.makeMaliciousQuestion(testUser)
 
             beforeEach('insert malicious question', () => {
-                helpers.seedMaliciousQuestion(
+                return helpers.seedMaliciousQuestion(
                     db,
                     testUser,
                     maliciousQuestion
                 )
             })
 
+            it('removes XSS attack content', () => {
             return supertest(app)
-                .get(`/api/question/${maliciousQuestion.id}`)
-                //.set('Authorization', helpers.makeAuthHeader(testUser))
+                .get(`/api/questions/${maliciousQuestion.id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUser))
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.q_title).to.eql(expectedQuestion.title)
-                    expect(res.body.q_body).to.eql(expectedQuestion.body)
+                    expect(res.body.question_title).to.eql(expectedQuestion.question_title)
+                    expect(res.body.question_body).to.eql(expectedQuestion.question_body)
                 })
+            })
         })
-    })
+     })
 
-    describe('/GET /api/questions/:question_id/answers', () => {
+    describe('/GET /api/questions/:question_id/answers/', () => {
         context('given no questions', () => {
             beforeEach(() => 
-                helpers.seedUsers(db, testUsers)
+                helpers.seedQuestionsTable(
+                    db,
+                    testUsers,
+                )
             )
 
             it('responds with 404', () => {
                 const questionId = 12345
                 return supertest(app)
-                    .get(`/api/questions/${questionId}`)
+                    .get(`/api/questions/${questionId}/answers`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(404, {error: 'Question does not exist'})
             })
@@ -169,7 +183,7 @@ describe('Questions Endpoints', function() {
 
         context('given there are answers for the question', () => {
             beforeEach('insert questions', () => {
-               helpers.seedQuestionsTables(
+               return helpers.seedQuestionsTable(
                    db,
                    testUsers,
                    testQuestions,
@@ -177,8 +191,8 @@ describe('Questions Endpoints', function() {
                )
             })
 
-            it('responds with 200 and the specified answers', () => {
-                const questionId = 2
+            it('responds with 200 and the specified answer', () => {
+                const questionId = 1
                 const expectedAnswers = helpers.makeExpectedQuestionAnswers(
                     testUsers,
                     questionId,
@@ -187,11 +201,10 @@ describe('Questions Endpoints', function() {
 
                 return supertest(app)
                     .get(`/api/questions/${questionId}/answers`)
-                    //.set('Authorization': helpers.makeAuthHeaders(testUsers[0]))
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedAnswers)
             })
 
         })
     })
-
 })
