@@ -11,17 +11,17 @@ const answersRouter = require('./answers/answers-router')
 
 const app = express()
 
-const corsOptions = {
-    origin: 'http://askify.now.sh',
-    optionsSuccessStatus: 200 //for legacy browsers
-}
+// const corsOptions = {
+//     origin: 'http://askify.now.sh',
+//     optionsSuccessStatus: 200 //for legacy browsers
+// }
 
 const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
     : 'common';
 
 app.use(morgan(morganOption))
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(helmet())
 
 
