@@ -128,7 +128,7 @@ describe('Users Endpoints', function() {
             })
 
             context('Happy path', () => {
-                it('responds 201, serialized user, storing bcrypted password', () => {
+                it('responds 201, auth-token, storing bcrypted password', () => {
                     const newUser = {
                         user_name: 'test user_name',
                         password: '11AAaa!!',
@@ -140,20 +140,22 @@ describe('Users Endpoints', function() {
                         .send(newUser)
                         .expect(201)
                         .expect(res => {
-                            expect(res.body).to.have.property('id')
-                            expect(res.body.user_name).to.eql(newUser.user_name)
-                            expect(res.body.full_name).to.eql(newUser.full_name)
-                            expect(res.body).to.not.have.property('password')
-                            expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
+                            expect(res.body).to.have.property('authToken')
+                            expect(res.body).to.have.property('user')
+                            expect(res.body.user).to.have.property('id')
+                            expect(res.body.user.user_name).to.eql(newUser.user_name)
+                            expect(res.body.user.full_name).to.eql(newUser.full_name)
+                            expect(res.body.user).to.not.have.property('password')
+                            expect(res.headers.location).to.eql(`/api/users/${res.body.user.id}`)
                             const expectedDate = new Date().toLocaleString('en', {timezone: 'UTC' })
-                            const actualDate = new Date(res.body.date_created).toLocaleString()
+                            const actualDate = new Date(res.body.user.date_created).toLocaleString()
                             expect(actualDate).to.eql(expectedDate)
                         })
                         .expect(res => 
                             db 
                                 .from('askify_users')
                                 .select('*')
-                                .where({id: res.body.id })
+                                .where({id: res.body.user.id })
                                 .first()
                                 .then(row => {
                                     expect(row.user_name).to.eql(newUser.user_name)

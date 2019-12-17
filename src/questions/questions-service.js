@@ -82,6 +82,7 @@ const QuestionsService = {
       question_body: xss(question.question_body),
       date_created: new Date(question.date_created),
       number_of_answers: Number(question.number_of_answers) || 0,
+      votes: question.votes,
       tags: xss(question.tags),
       user: {
         user_id: user.user_id,

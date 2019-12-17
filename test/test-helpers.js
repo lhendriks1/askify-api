@@ -42,35 +42,39 @@ function makeQuestionsArray(users) {
     return [
         {
           id: 1,
-          title: 'First test post!',
+          title: 'First test question!',
           user_id: users[0].id,
           date_created: new Date('2019-01-22T16:28:32.615Z'),
           body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-          tags: '{"tag1", "tag2"}'
+          tags: '{"tag1", "tag2"}',
+          votes: 2,
         },
         {
           id: 2,
-          title: 'Second test post!',
+          title: 'Second test question!',
           user_id: users[1].id,
           date_created: new Date('2019-01-22T16:28:32.615Z'),
           body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-          tags: '{"tag1", "tag2"}'
+          tags: '{"tag1", "tag2"}',
+          votes: 2,
         },
         {
           id: 3,
-          title: 'Third test post!',
+          title: 'Third test question!',
           user_id: users[2].id,
           date_created: new Date('2019-01-22T16:28:32.615Z'),
           body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-          tags: '{"tag3", "tag2"}'
+          tags: '{"tag3", "tag2"}',
+          votes: 5,
         },
         {
           id: 4,
-          title: 'Fourth test post!',
+          title: 'Fourth test question!',
           user_id: users[3].id,
           date_created: new Date('2019-01-22T16:28:32.615Z'),
           body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-          tags: '{}'
+          tags: '{}',
+          votes: 9,
         },
       ]
 }
@@ -152,6 +156,7 @@ function makeExpectedQuestion(users, question, answers=[]) {
       date_created: question.date_created.toISOString(),
       tags: String(question.tags).replace(/[{]|[}]|[\\"]|[ ]/g, ""),
       number_of_answers: Number(number_of_answers),
+      votes: question.votes,
       user: {
         user_id: user.id,
         user_name: user.user_name,
@@ -188,6 +193,7 @@ function makeExpectedQuestion(users, question, answers=[]) {
       title: 'Naughty naughty very naughty <script>alert("xss");</script>',
       user_id: user.id,
       body: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+      votes: 0,
     }
 
     const expectedQuestion = {

@@ -51,7 +51,8 @@ usersRouter.post('/', jsonBodyParser, (req, res, next) => {
                                 .status(201)
                                 .location(path.posix.join(req.originalUrl, `/${user.id}`))
                                 .send({
-                                    authToken: AuthService.createJwt(sub, payload)
+                                    authToken: AuthService.createJwt(sub, payload),
+                                    user: serializedUser
                                 })
                         })
                 })
