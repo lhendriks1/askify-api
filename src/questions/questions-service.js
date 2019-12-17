@@ -10,6 +10,7 @@ const QuestionsService = {
         'q.body AS question_body',
         'q.date_created AS date_created',
         'q.tags',
+        'q.votes',
         db.raw(
           `count(DISTINCT ans) AS number_of_answers`
         ),
