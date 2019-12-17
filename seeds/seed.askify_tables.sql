@@ -13,32 +13,32 @@ VALUES
     ('Test user 3', 'test-user-3', 'password', '2019-01-22T16:28:32.615Z', null),
     ('Test user 4', 'test-user-4', 'password', '2019-01-22T16:28:32.615Z', '2019-07-22T16:28:32.615Z');
 
-INSERT INTO askify_questions (title, body, tags, date_created, user_id)
+INSERT INTO askify_questions (title, body, tags, date_created, votes, user_id)
 VALUES
     ('First test question!', 
      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag1', 'tag2'], '2019-01-20T16:28:32.615Z', 1),
+      ARRAY ['tag1', 'tag2'], '2019-01-20T16:28:32.615Z', 2, 1),
     ('Second test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag1', 'tag3'], '2019-01-22T16:28:32.615Z', 1),
+      ARRAY ['tag1', 'tag3'], '2019-01-22T16:28:32.615Z', 0, 1),
     ('Third test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag2'], '2019-02-18T16:28:32.615Z', 3),
+      ARRAY ['tag2'], '2019-02-18T16:28:32.615Z', 5, 3),
     ('Fourth test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag5'], '2019-05-09T16:28:32.615Z', 2),
+      ARRAY ['tag5'], '2019-05-09T16:28:32.615Z', 8, 2),
     ('Fifth test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag3'], '2019-02-12T16:28:32.615Z', 2),
+      ARRAY ['tag3'], '2019-02-12T16:28:32.615Z', 1, 2),
     ('Sixth test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag3'], '2019-08-01T16:28:32.615Z', 4),
+      ARRAY ['tag3'], '2019-08-01T16:28:32.615Z', 0, 4),
     ('Seventh test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag3'], '2019-02-21T16:28:32.615Z', 4),
+      ARRAY ['tag3'], '2019-02-21T16:28:32.615Z', 2, 4),
     ('Eigth test question!',
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-      ARRAY ['tag2'], '2019-04-20T16:28:32.615Z', 1);
+      ARRAY ['tag2'], '2019-04-20T16:28:32.615Z', 3, 1);
 
 INSERT INTO askify_answers (answer, date_created, question_id, user_id, votes)
 VALUES
