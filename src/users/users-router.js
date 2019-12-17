@@ -53,7 +53,6 @@ usersRouter.post('/', jsonBodyParser, (req, res, next) => {
                                 .send({
                                     authToken: AuthService.createJwt(sub, payload)
                                 })
-                                // .json(serializedUser)
                         })
                 })
         })
