@@ -50,8 +50,8 @@ const AnswersService = {
             date_created: new Date(answer.date_created),
             user: {
                 id: user.id,
-                user_name: answer.user_name,
-                full_name: answer.full_name,
+                user_name: user.user_name,
+                full_name: user.full_name,
                 date_created: new Date(user.date_created)
             }
 
