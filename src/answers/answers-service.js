@@ -9,6 +9,7 @@ const AnswersService = {
                 'ans.answer',
                 'ans.date_created',
                 'ans.question_id',
+                'votes',
                 db.raw(
                     `json_strip_nulls(
                         row_to_json(
@@ -48,6 +49,7 @@ const AnswersService = {
             answer: xss(answer.answer),
             question_id: answer.question_id,
             date_created: new Date(answer.date_created),
+            votes: answer.votes,
             user: {
                 id: user.id,
                 user_name: user.user_name,
