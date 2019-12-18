@@ -176,6 +176,7 @@ function makeExpectedQuestion(users, question, answers=[]) {
         id: ans.id,
         answer: ans.answer,
         date_created: ans.date_created.toISOString(),
+        votes: ans.votes,
         user: {
           user_id: answerUser.id,
           user_name: answerUser.user_name,
