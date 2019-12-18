@@ -1,8 +1,10 @@
 const express = require('express')
+const path = require('path')
 const QuestionsService = require('./questions-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const questionsRouter = express.Router()
+const jsonBodyParser = express.json()
 
 questionsRouter
     .route('/')
@@ -11,6 +13,27 @@ questionsRouter
         QuestionsService.getAllQuestions(req.app.get('db'))
         .then(questions => {
             res.json(questions.map(QuestionsService.serializeQuestion))
+        })
+        .catch(next)
+    })
+    .post(requireAuth, jsonBodyParser, (req, res, next) => {
+        const { title, body, tags } = req.body
+        const newQuestion = { title, body}
+
+        for (const [key, value] of Object.entries(newQuestion))
+        if (value == null)
+          return res.status(400).json({
+            error: `Missing '${key}' in request body`
+          })
+        newQuestion.tags = tags
+        newQuestion.user_id = req.user.id
+
+        QuestionsService.insertQuestion(req.app.get('db'), newQuestion)
+        .then(question => {
+            res
+                .status(201)
+                .location(path.posix.join(req.originalUrl, `/${question.question_id}`))
+                .json(QuestionsService.serializeQuestion(question))
         })
         .catch(next)
     })

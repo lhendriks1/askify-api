@@ -23,7 +23,7 @@ describe('Answers endpoints', function() {
     before('cleanup', () => helpers.cleanTables(db))
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe('POST /api/comments', () => {
+    describe('POST /api/answers', () => {
         beforeEach('insert questions', () => 
             helpers.seedQuestionsTable(
                 db,

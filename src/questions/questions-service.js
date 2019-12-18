@@ -74,7 +74,16 @@ const QuestionsService = {
       )
       .groupBy('ans.id', 'usr.id')
   },
-
+  insertQuestion(db, newQuestion) {
+    return db
+      .insert(newQuestion)
+      .into('askify_questions')
+      .returning('*')
+      .then(([question]) => question)
+      .then(question => 
+          QuestionsService.getById(db, question.id)
+      )
+  },
   serializeQuestion(question) {
     const { user } = question
     return {

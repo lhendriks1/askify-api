@@ -92,6 +92,43 @@ describe('Questions Endpoints', function() {
         })
      })
 
+     describe.only('/POST /api/questions', () => {
+        beforeEach('insert questions', () =>
+            helpers.seedQuestionsTable(
+                db,
+                testUsers,
+                testQuestions,
+                testAnswers
+            )
+        )
+
+        it('creates a question, responding with 201 and the new question', () => {
+            this.retries(3)
+            const newQuestion =  {
+                title: "test question",
+                body: "test question body",
+                tags: ['tag1', 'tag2']
+            }
+            const testUser = testUsers[0]
+
+            return supertest(app)
+                .post('/api/questions')
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .send(newQuestion)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body.user.user_id).to.eql(testUser.id)
+                    expect(res.body.question_title).to.eql(newQuestion.title)
+                    expect(res.body.question_body).to.eql(newQuestion.body)
+                    expect(res.body.tags).to.eql(new String(newQuestion.tags).replace(/\s/g, ""))
+                    const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                    const actualDate = new Date(res.body.date_created).toLocaleString()
+                    expect(actualDate).to.eql(expectedDate)
+                })
+
+        })
+     })
+
     describe('/GET /api/questions/:question_id', () => {
         context('given no questions', () => {
             beforeEach(() => 
