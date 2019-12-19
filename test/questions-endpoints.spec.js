@@ -200,7 +200,7 @@ describe('Questions Endpoints', function() {
         })
      })
 
-     describe.only('/PATCH /api/questions/:question_id', () => {
+     describe('/PATCH /api/questions/:question_id', () => {
 
         context('Given no questions', () => {
             beforeEach(() => 
@@ -230,7 +230,7 @@ describe('Questions Endpoints', function() {
                 )
             )
 
-            it('responds with 204 and updates the article', () => {
+            it('responds with 204 and updates the question', () => {
                 const idToUpdate = 2
                 const testUser = testUsers[1]
                 const updateQuestion = {

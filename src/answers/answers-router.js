@@ -33,4 +33,59 @@ answersRouter
             .catch(next)
     })
 
+answersRouter
+    .route('/:answer_id')
+    .all(requireAuth)
+    .all(checkAnswerExists)
+    .get((req, res, next) => {
+      AnswersService.getById(
+        req.app.get('db'),
+        req.params.answer_id
+      )
+        .then(answer => 
+            res
+              .status(200)
+              .json(AnswersService.serializeAnswer(answer)))
+    })
+    .patch(jsonBodyParser, (req, res, next) => {
+      const { answer, votes } = req.body
+      const answerToUpdate = { answer, votes }
+
+      const numberOfValues = Object.values(answerToUpdate).filter(Boolean).length
+      if (numberOfValues === 0)
+          return res.status(400).json({
+              error: {
+                  message: `Request body must contain either 'answer', or 'votes'`
+              }
+          })
+
+          AnswersService.updateAnswer(
+            req.app.get('db'),
+            req.params.answer_id,
+            answerToUpdate
+          )
+            .then(numRowsAffected => {
+              res.status(204).end()
+            })
+    })
+
+
+    async function checkAnswerExists(req, res, next) {
+      try {
+          const answer = await AnswersService.getById(
+              req.app.get('db'),
+              req.params.answer_id
+          )
+  
+          if (!answer)
+              return res.status(404).json({
+                  error: 'Answer does not exist'
+              })
+          res.answer = answer
+          next()
+      } catch (error) {
+          next(error)
+      }
+  }
+
 module.exports = answersRouter

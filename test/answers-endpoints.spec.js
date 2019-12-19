@@ -8,6 +8,7 @@ describe('Answers endpoints', function() {
     const {
         testQuestions,
         testUsers,
+        testAnswers
     } = helpers.makeQuestionsFixtures()
 
     before('make knex instance', () => {
@@ -19,7 +20,6 @@ describe('Answers endpoints', function() {
     })
 
     after('disconnect from db', () => db.destroy())
-
     before('cleanup', () => helpers.cleanTables(db))
     afterEach('cleanup', () => helpers.cleanTables(db))
 
@@ -49,7 +49,7 @@ describe('Answers endpoints', function() {
                     expect(res.body).to.have.property('id')
                     expect(res.body.answer).to.eql(newAnswer.answer)
                     expect(res.body.question_id).to.eql(newAnswer.question_id)
-                    expect(res.body.user.id).to.eql(testUser.id)
+                    expect(res.body.user.user_id).to.eql(testUser.id)
                     expect(res.headers.location).to.eql(`/api/answers/${res.body.id}`)
                     const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
                     const actualDate = new Date(res.body.date_created).toLocaleString()
@@ -95,4 +95,47 @@ describe('Answers endpoints', function() {
             })
         })
     })
+
+    describe('PATCH /api/answers/:answer_id', () => {
+
+        context('Given there are questions in the database', () => {
+            beforeEach(() => 
+                helpers.seedQuestionsTable(
+                    db,
+                    testUsers,
+                    testQuestions,
+                    testAnswers
+                )
+            )
+
+            it('responds with 204 and updates the answer', () => {
+                const idToUpdate = 2
+                const testUser = testUsers[1]
+                const updateAnswer = {
+                    answer: 'updated answer',
+                    votes: 10,
+                }
+                const expectedAnswer = {
+                    ...testAnswers[idToUpdate-1],
+                    ...updateAnswer
+                }
+
+                return supertest(app)
+                    .patch(`/api/answers/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUser))
+                    .send(updateAnswer)
+                    .expect(204)
+                    .then(res => 
+                        supertest(app)
+                            .get(`/api/answers/${idToUpdate}`)
+                            .set('Authorization', helpers.makeAuthHeader(testUser))
+                            .expect(res => {
+                                expect(res.body.answer).to.eql(expectedAnswer.answer)
+                                expect(res.body.votes).to.eql(expectedAnswer.votes)
+                                expect(res.body.user.user_id).to.eql(testUser.id)
+                            })
+                    )
+            })
+        })
+     })
 })

@@ -42,6 +42,11 @@ const AnswersService = {
                 AnswersService.getById(db, answer.id)
             )
     },
+    updateAnswer(db, id, newAnswerFields) {
+        return db('askify_answers')
+          .where({id})
+          .update(newAnswerFields)
+      },
     serializeAnswer(answer) {
         const { user } = answer 
         return {
@@ -51,7 +56,7 @@ const AnswersService = {
             date_created: new Date(answer.date_created),
             votes: answer.votes,
             user: {
-                id: user.id,
+                user_id: user.id,
                 user_name: user.user_name,
                 full_name: user.full_name,
                 date_created: new Date(user.date_created)
