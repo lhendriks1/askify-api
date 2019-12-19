@@ -44,6 +44,33 @@ questionsRouter.route('/:question_id')
     .get((req, res) => {
         res.json(QuestionsService.serializeQuestion(res.question))
     })
+    .patch(requireAuth, jsonBodyParser, (req, res, nex) => {
+        const { title, body, tags, votes } = req.body
+        const questionToUpdate = { title, body, tags, votes }
+        console.log('questionToUpdate: ', questionToUpdate)
+
+
+        const numberOfValues = Object.values(questionToUpdate).filter(Boolean).length
+        if (numberOfValues === 0)
+            return res.status(400).json({
+                error: {
+                    message: `Request body must contain either 'title', 'body', 'tags', or 'votes'`
+                }
+            })
+
+            res.status(204).end()
+
+            QuestionsService.updateQuestion(
+                req.app.get('db'),
+                req.params.question_id,
+                questionToUpdate
+            )
+                .then(numRowsAffected => {
+                    res.status(204).end()
+                })
+                    .catch(next)
+        
+    })
     
 questionsRouter.route('/:question_id/answers/')    
     .all(requireAuth)
@@ -54,7 +81,7 @@ questionsRouter.route('/:question_id/answers/')
             req.params.question_id
         )
     .then(answers => res.status(200).json(answers))    
-})
+    })
 
 
 async function checkQuestionExists(req, res, next) {

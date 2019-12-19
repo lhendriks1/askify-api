@@ -84,6 +84,17 @@ const QuestionsService = {
           QuestionsService.getById(db, question.id)
       )
   },
+  //TODO: TEST DELETE
+  deleteQuestion(db, id) {
+    return db('askify_questions')
+    .where({id})
+    .delete()
+  },
+  updateQuestion(db, id, newQuestionFields) {
+    return db('askify_questions')
+      .where({id})
+      .update(newQuestionFields)
+  },
   serializeQuestion(question) {
     const { user } = question
     return {

@@ -92,7 +92,7 @@ describe('Questions Endpoints', function() {
         })
      })
 
-     describe.only('/POST /api/questions', () => {
+     describe('/POST /api/questions', () => {
         beforeEach('insert questions', () =>
             helpers.seedQuestionsTable(
                 db,
@@ -196,6 +196,69 @@ describe('Questions Endpoints', function() {
                     expect(res.body.question_title).to.eql(expectedQuestion.question_title)
                     expect(res.body.question_body).to.eql(expectedQuestion.question_body)
                 })
+            })
+        })
+     })
+
+     describe.only('/PATCH /api/questions/:question_id', () => {
+
+        context('Given no questions', () => {
+            beforeEach(() => 
+                helpers.seedQuestionsTable(
+                    db,
+                    testUsers,
+                )
+            )
+            const testUser = testUsers[0]
+
+            it('responds with 404', () => {
+                const questionId = 12345
+                return supertest(app)
+                .delete(`/api/questions/${questionId}`)
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .expect(404, {error: `Question does not exist`})
+            })
+        })
+
+        context('Given there are questions in the database', () => {
+            beforeEach(() => 
+                helpers.seedQuestionsTable(
+                    db,
+                    testUsers,
+                    testQuestions,
+                    testAnswers
+                )
+            )
+
+            it('responds with 204 and updates the article', () => {
+                const idToUpdate = 2
+                const testUser = testUsers[1]
+                const updateQuestion = {
+                    title: 'updated question title',
+                    body: 'updated question body',
+                    votes: 10,
+                }
+                const expectedQuestion = {
+                    ...testQuestions[idToUpdate-1],
+                    ...updateQuestion
+                }
+
+                return supertest(app)
+                    .patch(`/api/questions/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUser))
+                    .send(updateQuestion)
+                    .expect(204)
+                    .then(res => 
+                        supertest(app)
+                            .get(`/api/questions/${idToUpdate}`)
+                            .set('Authorization', helpers.makeAuthHeader(testUser))
+                            .expect(res => {
+                                expect(res.body.question_title).to.eql(expectedQuestion.title)
+                                expect(res.body.question_body).to.eql(expectedQuestion.body)
+                                expect(res.body.votes).to.eql(expectedQuestion.votes)
+                                expect(res.body.user.user_id).to.eql(expectedQuestion.user_id)
+                            })
+                    )
             })
         })
      })
