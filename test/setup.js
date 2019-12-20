@@ -1,7 +1,7 @@
 process.env.TZ = 'UTC'
 process.env.NODE_ENV = 'test'
 process.env.JWT_SECRET = 'test-secret-token'
-process.env.JWT_EXPIRY = '3m'
+process.env.JWT_EXPIRY = '20s'
 
 require('dotenv').config()
 
