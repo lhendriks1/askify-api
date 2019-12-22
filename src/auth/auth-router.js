@@ -52,7 +52,7 @@ authRouter.post('/refresh', requireAuth, (req, res) => {
 })
 
 .post('/guest-login', (req, res, next) => {
-  const user_name = 'test-user-1'
+  const user_name = 'test-user'
   const password = 'Password1!'
   const loginUser = { user_name, password }
 
