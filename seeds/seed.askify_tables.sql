@@ -8,10 +8,10 @@ TRUNCATE
 
 INSERT INTO askify_users (full_name, user_name, password, date_created, date_modified)
 VALUES
-    ('Test user 1', 'test-user-1', 'password', '2019-01-22T16:28:32.615Z', '2019-06-22T16:28:32.615Z'),
-    ('Test user 2', 'test-user-2', 'password', '2019-01-22T16:28:32.615Z', null),
-    ('Test user 3', 'test-user-3', 'password', '2019-01-22T16:28:32.615Z', null),
-    ('Test user 4', 'test-user-4', 'password', '2019-01-22T16:28:32.615Z', '2019-07-22T16:28:32.615Z');
+    ('Test user 1', 'test-user-1', 'Password1!', '2019-06-22T16:28:32.615Z', '2019-06-22T16:28:32.615Z'),
+    ('Test user 2', 'test-user-2', 'Password1!', '2019-08-22T16:28:32.615Z', null),
+    ('Test user 3', 'test-user-3', 'Password1!', '2019-10-22T16:28:32.615Z', null),
+    ('Test user 4', 'test-user-4', 'Password1!', '2019-12-22T16:28:32.615Z', '2019-07-22T16:28:32.615Z');
 
 INSERT INTO askify_questions (title, body, tags, date_created, votes, user_id)
 VALUES
