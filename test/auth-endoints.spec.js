@@ -113,40 +113,19 @@ describe('Auth endpoints', function () {
             )
         )
 
-        const requiredFields = ['password', 'user_name']
-
-        requiredFields.forEach(field => {
-            const loginAttemptBody = {
-                user_name: testUser.user_name,
-                password: testUser.password,
-            }
-
-            it(`responds with 400 required error when ${field} is missing`, () => {
-                delete loginAttemptBody[field]
-                return supertest(app)
-                    .post('/api/auth/login')
-                    .send(loginAttemptBody)
-                    .expect(400)
-            })
-        })
-
         it('responds 200 and JWT auth token using secret when valid credentials', () => {
-            const userValidCreds = {
-                user_name: testUser.user_name,
-                password: testUser.password
-            }
+
             const expectedToken = jwt.sign(
-                { user_id: testUser.id },
+                { user_id: 1 },
                 process.env.JWT_SECRET,
                 {
-                    subject: testUser.user_name,
+                    subject: 'test-user-1',
                     expiresIn: process.env.JWT_EXPIRY,
                     algorithm: 'HS256',
                 }
             )
             return supertest(app)
                 .post('/api/auth/guest-login')
-                .send(userValidCreds)
                 .expect(200, {
                     authToken: expectedToken
                 })
