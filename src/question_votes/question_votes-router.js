@@ -32,8 +32,7 @@ questionVotesRouter
                 }
             })
 
-        //check if user has previously voted on this question
-        
+        //Check if user has previously voted on this question
         QuestionVotesService.getQuestionVote(
             req.app.get('db'),
             req.params.question_id,
