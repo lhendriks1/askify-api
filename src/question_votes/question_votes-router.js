@@ -24,14 +24,6 @@ questionVotesRouter
         const { vote } = req.body
         const voteToUpdate = { vote }
 
-        const numberOfValues = Object.values(voteToUpdate).filter(Boolean).length
-        if (numberOfValues === 0)
-            return res.status(400).json({
-                error: {
-                    message: `Request body must contain'vote'`
-                }
-            })
-
         //Check if user has previously voted on this question
         QuestionVotesService.getQuestionVote(
             req.app.get('db'),
