@@ -1,0 +1,1 @@
+ALTER TABLE askify_questions DROP COLUMN IF EXISTS votes;

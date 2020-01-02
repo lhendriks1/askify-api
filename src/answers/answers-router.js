@@ -40,7 +40,8 @@ answersRouter
     .get((req, res, next) => {
       AnswersService.getById(
         req.app.get('db'),
-        req.params.answer_id
+        req.params.answer_id,
+        req.user.id
       )
         .then(answer => 
             res
@@ -74,7 +75,8 @@ answersRouter
       try {
           const answer = await AnswersService.getById(
               req.app.get('db'),
-              req.params.answer_id
+              req.params.answer_id,
+              req.user.id
           )
   
           if (!answer)

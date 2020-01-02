@@ -23,14 +23,14 @@ authRouter
       .then(dbUser => {
         if (!dbUser)
           return res.status(400).json({
-            error: 'Incorrect user_name or password',
+            error: 'Incorrect user name or password',
           })
 
         return AuthService.comparePasswords(loginUser.password, dbUser.password)
           .then(compareMatch => {
             if (!compareMatch)
               return res.status(400).json({
-                error: 'Incorrect user_name or password',
+                error: 'Incorrect user name or password',
               })
 
             const sub = dbUser.user_name
@@ -52,7 +52,7 @@ authRouter.post('/refresh', requireAuth, (req, res) => {
 })
 
 .post('/guest-login', (req, res, next) => {
-  const user_name = 'test-user'
+  const user_name = 'test-user-1'
   const password = 'Password1!'
   const loginUser = { user_name, password }
 
@@ -70,7 +70,7 @@ authRouter.post('/refresh', requireAuth, (req, res) => {
         .then(compareMatch => {
           if (!compareMatch)
             return res.status(400).json({
-              error: 'Incorrect guest user_name or password',
+              error: 'Incorrect guest user name or password',
             })
 
           const sub = dbUser.user_name

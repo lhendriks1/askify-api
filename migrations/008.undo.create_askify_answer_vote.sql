@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS askify_answer_vote;

@@ -8,7 +8,9 @@ describe('Questions Endpoints', function() {
     const {
         testUsers,
         testQuestions,
+        testQuestionVotes,
         testAnswers,
+        testAnswerVotes
     } = helpers.makeQuestionsFixtures()
 
 
@@ -46,6 +48,7 @@ describe('Questions Endpoints', function() {
                     db,
                     testUsers,
                     testQuestions,
+                    testQuestionVotes,
                     testAnswers
                 )
             )
@@ -55,6 +58,7 @@ describe('Questions Endpoints', function() {
                     helpers.makeExpectedQuestion(
                         testUsers,
                         q,
+                        testQuestionVotes,
                         testAnswers
                     )
                 )
@@ -67,7 +71,7 @@ describe('Questions Endpoints', function() {
         })
 
         context('given an XSS question attack', () => {
-            const testUser = helpers.makeUsersArray()[1]
+            const testUser = helpers.makeUsersArray()[0]
             const {maliciousQuestion, expectedQuestion } = 
             helpers.makeMaliciousQuestion(testUser)
 
@@ -98,6 +102,7 @@ describe('Questions Endpoints', function() {
                 db,
                 testUsers,
                 testQuestions,
+                testQuestionVotes,
                 testAnswers
             )
         )
@@ -153,6 +158,7 @@ describe('Questions Endpoints', function() {
                     db,
                     testUsers,
                     testQuestions,
+                    testQuestionVotes,
                     testAnswers
                 )
             )
@@ -162,7 +168,9 @@ describe('Questions Endpoints', function() {
                 const expectedQuestion = helpers.makeExpectedQuestion(
                     testUsers,
                     testQuestions[questionId - 1],
-                    testAnswers
+                    testQuestionVotes,
+                    testAnswers,
+                    testAnswerVotes
                 )
 
                 return supertest(app)
@@ -226,17 +234,17 @@ describe('Questions Endpoints', function() {
                     db,
                     testUsers,
                     testQuestions,
+                    testQuestionVotes,
                     testAnswers
                 )
             )
 
             it('responds with 204 and updates the question', () => {
                 const idToUpdate = 2
-                const testUser = testUsers[1]
+                const testUser = testUsers[0]
                 const updateQuestion = {
                     title: 'updated question title',
                     body: 'updated question body',
-                    votes: 10,
                 }
                 const expectedQuestion = {
                     ...testQuestions[idToUpdate-1],
@@ -287,16 +295,19 @@ describe('Questions Endpoints', function() {
                    db,
                    testUsers,
                    testQuestions,
-                   testAnswers
+                   testQuestionVotes,
+                   testAnswers,
+                   testAnswerVotes
                )
             })
-
+            
             it('responds with 200 and the specified answer', () => {
                 const questionId = 1
                 const expectedAnswers = helpers.makeExpectedQuestionAnswers(
                     testUsers,
                     questionId,
-                    testAnswers
+                    testAnswers,
+                    testAnswerVotes
                 )
 
                 return supertest(app)

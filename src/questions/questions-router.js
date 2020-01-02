@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const QuestionsService = require('./questions-service')
+const AnswersService = require('../answers/answers-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const questionsRouter = express.Router()
@@ -10,7 +11,8 @@ questionsRouter
     .route('/')
     .all(requireAuth)
     .get((req, res, next) => {
-        QuestionsService.getAllQuestions(req.app.get('db'))
+        const active_user_id = req.user.id
+        QuestionsService.getAllQuestions(req.app.get('db'), active_user_id)
         .then(questions => {
             res.json(questions.map(QuestionsService.serializeQuestion))
         })
@@ -21,7 +23,7 @@ questionsRouter
         const newQuestion = { title, body}
 
         for (const [key, value] of Object.entries(newQuestion))
-        if (value == null)
+        if (value.length === 0)
           return res.status(400).json({
             error: `Missing '${key}' in request body`
           })
@@ -75,9 +77,12 @@ questionsRouter.route('/:question_id/answers/')
     .get((req, res) => {
         QuestionsService.getAnswersForQuestion(
             req.app.get('db'),
-            req.params.question_id
+            req.params.question_id,
+            req.user.id
         )
-    .then(answers => res.status(200).json(answers))    
+    .then(answers => {
+        res.json(answers.map(QuestionsService.serializeQuestionAnswer))
+    })    
     })
 
 
@@ -85,7 +90,8 @@ async function checkQuestionExists(req, res, next) {
     try {
         const question = await QuestionsService.getById(
             req.app.get('db'),
-            req.params.question_id
+            req.params.question_id,
+            req.user.id
         )
 
         if (!question)

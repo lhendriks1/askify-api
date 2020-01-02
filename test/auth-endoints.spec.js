@@ -47,12 +47,12 @@ describe('Auth endpoints', function () {
         })
 
 
-        it('responds `400 invalid user_name or password` when bad user_name', () => {
+        it('responds `400 invalid user name or password` when bad user_name', () => {
             const userInvalidUser = { user_name: 'user_not', password: 'existy' }
             return supertest(app)
                 .post('/api/auth/login')
                 .send(userInvalidUser)
-                .expect(400, { error: `Incorrect user_name or password`})
+                .expect(400, { error: `Incorrect user name or password`})
         })
 
         it('responds 200 and JWT auth token using secret when valid credentials', () => {

@@ -7,8 +7,10 @@ describe('Answers endpoints', function() {
 
     const {
         testQuestions,
+        testQuestionVotes,
         testUsers,
-        testAnswers
+        testAnswers,
+        testAnswerVotes
     } = helpers.makeQuestionsFixtures()
 
     before('make knex instance', () => {
@@ -104,7 +106,9 @@ describe('Answers endpoints', function() {
                     db,
                     testUsers,
                     testQuestions,
-                    testAnswers
+                    testQuestionVotes,
+                    testAnswers,
+                    testAnswerVotes
                 )
             )
 
@@ -113,7 +117,6 @@ describe('Answers endpoints', function() {
                 const testUser = testUsers[1]
                 const updateAnswer = {
                     answer: 'updated answer',
-                    votes: 10,
                 }
                 const expectedAnswer = {
                     ...testAnswers[idToUpdate-1],
@@ -131,7 +134,6 @@ describe('Answers endpoints', function() {
                             .set('Authorization', helpers.makeAuthHeader(testUser))
                             .expect(res => {
                                 expect(res.body.answer).to.eql(expectedAnswer.answer)
-                                expect(res.body.votes).to.eql(expectedAnswer.votes)
                                 expect(res.body.user.user_id).to.eql(testUser.id)
                             })
                     )

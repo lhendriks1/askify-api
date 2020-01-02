@@ -1,0 +1,3 @@
+ALTER TABLE askify_questions
+  ADD COLUMN
+    votes INTEGER NOT NULL DEFAULT '0';

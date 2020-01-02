@@ -57,7 +57,19 @@ VALUES
     ('Thirteenth test answer', '2019-02-28T16:28:32.615Z', 7, 1, 3),
     ('Fourteenth test answer', '2019-04-22T12:28:32.615Z', 8, 1, 3);
 
-    COMMIT;
+INSERT INTO askify_question_vote (question_id, user_id, vote)
+VALUES
+(2, 1, 1),
+(2, 3, 1),
+(1, 2, -1),
+(1, 3, -1), 
+(1, 4, -1),
+(3, 1, -1),
+(3, 2, 1), 
+(3, 4, 1), 
+(4, 1, -1);
+
+COMMIT;
 
 
 
