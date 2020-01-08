@@ -37,10 +37,10 @@ Askify is a full-stack stack app built with React, Node, Express, and PostgreSQL
 
 ## Screenshots
 - Postgres schema design: User_Id is a foreign key dependency in every table so that each user's question, answer, and vote history is recorded.
-<img src="./screenshots/askify_ER_Diagram.png" alt="ER Diagram form DBeaver" width="250" >
+<img src="./screenshots/askify_ER_Diagram.png" alt="ER Diagram form DBeaver" width="350" >
 
 <br>
 
 - Test driven development for every endpoint ensures comprehensive test coverage.
-<img src="./screenshots/askify_tests.png" alt="passed tests screenshot" width="250" >
+<img src="./screenshots/askify_tests.png" alt="passed tests screenshot" width="350" >
 
