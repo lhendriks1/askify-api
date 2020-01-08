@@ -29,6 +29,9 @@ Askify is a full-stack stack app built with React, Node, Express, and PostgreSQL
 - The React client is hosted on Zeit.
 - The Node + Express server and PostgreSQL database are hosted on Heroku.
 
+### CICD
+- The development process followed continuous integration (CI) and continuous development (CD) practices, including deploy early, commit often, build/deploy automation on a triggered basis, and database source control (via Postgrator migration scripts) 
+
 ### Mobile First Approach
 - The app is responsive to mobile, tablet and larger screen sizes. I built Askify using a mobile first approach
 
